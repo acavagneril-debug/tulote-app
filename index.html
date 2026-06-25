@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tu Lote — Calculadora de Lotaje</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0a0a0f;
+      --card:   #0f0f1a;
+      --border: #1e1e35;
+      --text:   #e2e8f0;
+      --muted:  #64748b;
+      --gfrom:  #a78bfa;
+      --gto:    #60a5fa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 64px 20px 36px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gfrom);
+      border: 1px solid rgba(167,139,250,.28);
+      border-radius: 100px;
+      padding: 5px 16px;
+      margin-bottom: 28px;
+      background: rgba(167,139,250,.06);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, var(--gfrom) 0%, var(--gto) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 0 40px rgba(167,139,250,.22));
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 0 20px 44px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(167,139,250,.3);
+    }
+
+    .tab.soon {
+      background: var(--card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: default;
+    }
+
+    .tab .badge {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(167,139,250,.18);
+      color: var(--gfrom);
+      border-radius: 100px;
+      padding: 2px 7px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── CARDS ── */
+    .card, .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px;
+      animation: rise 0.45s cubic-bezier(.16,.68,.32,1) both;
+    }
+
+    .result-card { animation-delay: 0.08s; }
+
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── FORM ── */
+    .field { margin-bottom: 22px; }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .select-wrap { position: relative; }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 6px solid var(--muted);
+      pointer-events: none;
+    }
+
+    .field select,
+    .field input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--text);
+      font-size: 0.97rem;
+      font-family: inherit;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .field select { padding-right: 44px; cursor: pointer; }
+
+    .field select:focus,
+    .field input:focus {
+      border-color: var(--gfrom);
+      box-shadow: 0 0 0 3px rgba(167,139,250,.12);
+    }
+
+    .field input::placeholder { color: #334155; }
+
+    /* ── RISK BUTTONS ── */
+    .risk-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .risk-btn {
+      padding: 11px 6px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+    }
+
+    .risk-btn:hover:not(.active) {
+      border-color: rgba(167,139,250,.5);
+      color: var(--gfrom);
+    }
+
+    .risk-btn.active {
+      background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(167,139,250,.28);
+    }
+
+    /* ── CALC BUTTON ── */
+    .calc-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      font-size: 0.97rem;
+      font-weight: 700;
+      border: none;
+      background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.18s, transform 0.12s, box-shadow 0.18s;
+      letter-spacing: 0.03em;
+      font-family: inherit;
+      box-shadow: 0 4px 20px rgba(167,139,250,.3);
+    }
+
+    .calc-btn:hover  { opacity: 0.92; box-shadow: 0 6px 28px rgba(167,139,250,.4); }
+    .calc-btn:active { transform: scale(0.985); opacity: 0.88; }
+
+    /* ── RESULT ── */
+    .result-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px 0 24px;
+    }
+
+    .result-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .result-number {
+      font-size: clamp(3.2rem, 8vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 14px;
+      transition: all 0.3s cubic-bezier(.16,.68,.32,1.2);
+    }
+
+    .result-number.has-value {
+      background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px rgba(167,139,250,.28));
+    }
+
+    .result-number.empty { color: var(--border); }
+
+    .instr-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: rgba(167,139,250,.1);
+      border: 1px solid rgba(167,139,250,.22);
+      color: var(--gfrom);
+      border-radius: 100px;
+      padding: 4px 14px;
+      transition: opacity 0.25s;
+    }
+
+    /* ── METRICS ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-top: 20px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .metric {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .metric.lit { border-color: rgba(167,139,250,.3); }
+
+    .metric-value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 5px;
+      letter-spacing: -0.02em;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ── RATE STATUS ── */
+    .rate-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 14px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      min-height: 1rem;
+      transition: opacity 0.3s;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--muted);
+      transition: background 0.3s;
+    }
+
+    .status-dot.live      { background: #4ade80; }
+    .status-dot.estimated { background: #fb923c; }
+    .status-dot.loading   { background: var(--muted); animation: pulse 1.2s ease infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px 20px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer span {
+      background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 660px) {
+      .hero { padding: 48px 20px 28px; }
+      .hero p { font-size: 0.95rem; }
+      .grid { grid-template-columns: 1fr; }
+      .card, .result-card { padding: 24px 20px; }
+      .result-number { font-size: 3.6rem; }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Herramienta para Traders</div>
+    <h1>Tu Lote</h1>
+    <p>Calcula el tamaño de lote exacto para cada operación con gestión de riesgo profesional.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active">Lot Size</button>
+    <button class="tab soon">Profit / Loss <span class="badge">Pronto</span></button>
+    <button class="tab soon">Margen <span class="badge">Pronto</span></button>
+  </div>
+
+  <!-- CALCULATOR -->
+  <div class="container">
+    <div class="grid">
+
+      <!-- FORM -->
+      <div class="card">
+        <div class="card-title">Parámetros</div>
+
+        <div class="field">
+          <label for="instrument">Instrumento</label>
+          <div class="select-wrap">
+            <select id="instrument">
+              <option value="XAUUSD">XAUUSD — Oro / Dólar</option>
+              <option value="EURUSD">EURUSD — Euro / Dólar</option>
+              <option value="GBPUSD">GBPUSD — Libra / Dólar</option>
+              <option value="EURGBP">EURGBP — Euro / Libra</option>
+              <option value="USDJPY">USDJPY — Dólar / Yen</option>
+              <option value="GBPJPY">GBPJPY — Libra / Yen</option>
+              <option value="EURJPY">EURJPY — Euro / Yen</option>
+              <option value="NZDUSD">NZDUSD — Kiwi / Dólar</option>
+              <option value="NAS100">NAS100 — Nasdaq 100</option>
+              <option value="SPX500">SPX500 — S&amp;P 500</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="balance">Capital de la cuenta (USD)</label>
+          <input type="number" id="balance" placeholder="Ej: 10000" min="0" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="sl">Stop Loss (pips)</label>
+          <input type="number" id="sl" placeholder="Ej: 20" min="0" step="any" />
+        </div>
+
+        <div class="risk-label">Riesgo por operación</div>
+        <div class="risk-grid">
+          <button class="risk-btn" data-risk="1">1%</button>
+          <button class="risk-btn active" data-risk="2">2%</button>
+          <button class="risk-btn" data-risk="3">3%</button>
+          <button class="risk-btn" data-risk="5">5%</button>
+        </div>
+
+        <button class="calc-btn" id="calcBtn">Calcular Lotaje</button>
+        <div class="rate-status" id="rateStatus">
+          <span class="status-dot loading" id="statusDot"></span>
+          <span id="statusText">Cargando precios...</span>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="result-card">
+        <div class="card-title">Resultado</div>
+
+        <div class="result-main">
+          <div class="result-label">Tamaño del lote</div>
+          <div class="result-number empty" id="resultNum">—</div>
+          <div class="instr-badge" id="instrBadge" style="opacity:0">—</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="metrics">
+          <div class="metric" id="mRisk">
+            <div class="metric-value" id="moneyRisk">—</div>
+            <div class="metric-label">Dinero en riesgo</div>
+          </div>
+          <div class="metric" id="mPip">
+            <div class="metric-value" id="pipVal">—</div>
+            <div class="metric-label">Valor por pip</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>tulote.app</span> — Gestión de riesgo para traders profesionales
+  </footer>
+
+  <script>
+    const PIP = {
+      XAUUSD: 10,
+      EURUSD: 10,
+      GBPUSD: 10,
+      EURGBP: 10,
+      NZDUSD: 10,
+      NAS100: 1,
+      SPX500: 1,
+    };
+
+    let jpyRates = { USDJPY: 157, GBPJPY: 200, EURJPY: 170 };
+
+    function pipForInstrument(instrument) {
+      if (instrument in jpyRates) return (0.01 / jpyRates[instrument]) * 100000;
+      return PIP[instrument];
+    }
+
+    function setRateStatus(state) {
+      const dot  = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      dot.className = 'status-dot ' + state;
+      text.textContent = state === 'live' ? 'Precios en tiempo real ✓' : 'Precio estimado';
+    }
+
+    const JPY_PAIRS = [
+      { pair: 'USDJPY', from: 'USD' },
+      { pair: 'GBPJPY', from: 'GBP' },
+      { pair: 'EURJPY', from: 'EUR' },
+    ];
+
+    Promise.allSettled(
+      JPY_PAIRS.map(({ pair, from }) =>
+        fetch(`https://api.frankfurter.app/latest?from=${from}&to=JPY`)
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(data => { jpyRates[pair] = data.rates.JPY; })
+      )
+    ).then(results => {
+      const allOk = results.every(r => r.status === 'fulfilled');
+      setRateStatus(allOk ? 'live' : 'estimated');
+    });
+
+    let risk = 2;
+
+    document.querySelectorAll('.risk-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        risk = parseFloat(btn.dataset.risk);
+      });
+    });
+
+    function money(n) {
+      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calculate() {
+      const instrument = document.getElementById('instrument').value;
+      const balance    = parseFloat(document.getElementById('balance').value);
+      const sl         = parseFloat(document.getElementById('sl').value);
+
+      const numEl   = document.getElementById('resultNum');
+      const badge   = document.getElementById('instrBadge');
+      const riskEl  = document.getElementById('moneyRisk');
+      const pipEl   = document.getElementById('pipVal');
+
+      if (!balance || !sl || balance <= 0 || sl <= 0) {
+        numEl.textContent = '—';
+        numEl.className   = 'result-number empty';
+        badge.style.opacity = '0';
+        riskEl.textContent = '—';
+        pipEl.textContent  = '—';
+        document.getElementById('mRisk').classList.remove('lit');
+        document.getElementById('mPip').classList.remove('lit');
+        return;
+      }
+
+      const pipValue  = pipForInstrument(instrument);
+      const moneyRisk = balance * risk / 100;
+      const lots      = moneyRisk / (sl * pipValue);
+      const valPerPip = lots * pipValue;
+
+      numEl.textContent = lots.toFixed(2);
+      numEl.className   = 'result-number has-value';
+      badge.textContent  = instrument;
+      badge.style.opacity = '1';
+
+      riskEl.textContent = money(moneyRisk);
+      pipEl.textContent  = money(valPerPip);
+      document.getElementById('mRisk').classList.add('lit');
+      document.getElementById('mPip').classList.add('lit');
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', calculate);
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+  </script>
+</body>
+</html>
