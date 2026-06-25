@@ -410,7 +410,7 @@
     }
 
     .banner-col {
-      width: 148px;
+      width: 160px;
       flex-shrink: 0;
       position: sticky;
       top: 0;
@@ -427,6 +427,140 @@
 
     @media (max-width: 1024px) {
       .banner-col { display: none; }
+    }
+
+    /* ── BANNER SEÑALES ── */
+    .banner-signals {
+      width: 160px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+    }
+
+    .bs-desktop {
+      width: 100%;
+      height: 600px;
+      background: #0d0d1a;
+      border: 1px solid #6c63ff44;
+      border-radius: 12px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .bs-mobile { display: none; }
+
+    .bs-live-row { display: flex; align-items: center; gap: 5px; }
+
+    .bs-live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      flex-shrink: 0;
+      animation: sigPulse 1.4s ease infinite;
+    }
+
+    @keyframes sigPulse {
+      0%, 100% { opacity:1; box-shadow: 0 0 0 0 rgba(74,222,128,.6); }
+      60%       { box-shadow: 0 0 0 5px rgba(74,222,128,0); }
+    }
+
+    .bs-live-text { font-size: 11px; color: #4ade80; font-weight: 600; letter-spacing: .04em; }
+    .bs-title     { font-size: 24px; font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -.03em; }
+    .bs-subtitle  { font-size: 12px; color: #a89fff; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; }
+
+    .bs-gratis-badge {
+      display: inline-block;
+      font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .05em;
+      background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+      border-radius: 6px; padding: 4px 8px;
+      animation: glowBadge 2s ease infinite;
+    }
+
+    @keyframes glowBadge {
+      0%, 100% { box-shadow: 0 0 8px rgba(108,99,255,.4); }
+      50%       { box-shadow: 0 0 20px rgba(108,99,255,.9), 0 0 35px rgba(108,99,255,.3); }
+    }
+
+    .bs-divider      { height: 1px; background: rgba(108,99,255,.2); }
+    .bs-signal-label { font-size: 8px; color: #4a4a6a; font-weight: 500; }
+
+    .bs-signal-row  { display: flex; align-items: center; gap: 3px; min-height: 20px; }
+    .bs-signal-pair { font-size: 12px; font-weight: 700; color: #e2e8f0; flex: 1; }
+
+    .bs-dir-badge { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: .04em; }
+    .bs-dir-badge.buy  { background: rgba(34,197,94,.18);  color: #22c55e; }
+    .bs-dir-badge.sell { background: rgba(239,68,68,.18);  color: #ef4444; }
+
+    .bs-signal-time { font-size: 7px; color: #3a3a5a; flex-shrink: 0; }
+
+    .bs-checks { display: flex; flex-direction: column; gap: 5px; }
+    .bs-check  { font-size: 11px; color: #7a7a9a; display: flex; gap: 4px; line-height: 1.4; }
+    .bs-check::before { content: '✓'; color: #6c63ff; font-weight: 700; flex-shrink: 0; }
+
+    .bs-btn {
+      width: 100%; padding: 8px 4px;
+      background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+      color: #fff; font-size: 13px; font-weight: 700;
+      text-align: center; border-radius: 8px; border: none;
+      cursor: pointer; letter-spacing: .02em; font-family: inherit;
+      transition: opacity .18s, transform .12s;
+    }
+    .bs-btn:hover  { opacity: .88; }
+    .bs-btn:active { transform: scale(.97); }
+
+    .bs-footer-text { font-size: 7px; color: #3a3a5a; text-align: center; line-height: 1.5; }
+
+    /* ── MOBILE banner señales ── */
+    @media (max-width: 1024px) {
+      .page-layout { flex-wrap: wrap; }
+
+      .banner-signals {
+        width: 100%; height: auto;
+        position: static;
+        padding: 0 16px 24px;
+      }
+
+      .bs-desktop { display: none; }
+
+      .bs-mobile {
+        display: flex; align-items: center; gap: 10px;
+        width: 100%;
+        background: #0d0d1a;
+        border: 1px solid #6c63ff44;
+        border-radius: 12px;
+        padding: 14px 16px;
+        cursor: pointer;
+      }
+
+      .bs-m-left    { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+      .bs-m-live    { display: flex; align-items: center; gap: 5px; }
+      .bs-m-live-text  { font-size: 11px; color: #4ade80; font-weight: 600; white-space: nowrap; }
+      .bs-m-subtitle   { font-size: 9px; color: #5a5a7a; }
+
+      .bs-m-badge {
+        font-size: 10px; font-weight: 800; color: #fff;
+        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+        border-radius: 8px; padding: 6px 10px;
+        white-space: nowrap; flex-shrink: 0;
+        animation: glowBadge 2s ease infinite;
+      }
+
+      .bs-m-btn {
+        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+        color: #fff; font-size: 10px; font-weight: 700;
+        padding: 8px 10px; border-radius: 8px;
+        white-space: nowrap; border: none; cursor: pointer;
+        font-family: inherit; flex-shrink: 0;
+      }
     }
 
     /* ── RESPONSIVE ── */
@@ -555,8 +689,47 @@
 
   </div><!-- /main-col -->
 
-  <!-- ESPACIO DERECHO (reservado) -->
-  <div class="banner-col"></div>
+  <!-- BANNER SEÑALES DERECHO -->
+  <div class="banner-signals">
+
+    <!-- DESKTOP vertical -->
+    <div class="bs-desktop" onclick="window.open('https://t.me/+vbUqQDmAeJA2NDFh','_blank')">
+      <div class="bs-live-row">
+        <span class="bs-live-dot"></span>
+        <span class="bs-live-text">Señales en vivo</span>
+      </div>
+      <div class="bs-title">SEÑALES<br>GRATIS</div>
+      <div class="bs-subtitle">Canal VIP</div>
+      <span class="bs-gratis-badge">100% GRATIS</span>
+      <div class="bs-divider"></div>
+      <div class="bs-signal-label">Última señal enviada:</div>
+      <div class="bs-signal-row" id="sig1"></div>
+      <div class="bs-signal-row" id="sig2"></div>
+      <div class="bs-divider"></div>
+      <div class="bs-checks">
+        <div class="bs-check">Entrada, SL y TP incluidos</div>
+        <div class="bs-check">Oro, Forex e Índices</div>
+        <div class="bs-check">Análisis SMC diario</div>
+        <div class="bs-check">Sin costo, sin trampa</div>
+      </div>
+      <button class="bs-btn">📲 Unirme gratis</button>
+      <div class="bs-footer-text">Canal Telegram · T4T Academy</div>
+    </div>
+
+    <!-- MOBILE horizontal -->
+    <div class="bs-mobile" onclick="window.open('https://t.me/+vbUqQDmAeJA2NDFh','_blank')">
+      <div class="bs-m-left">
+        <div class="bs-m-live">
+          <span class="bs-live-dot"></span>
+          <span class="bs-m-live-text">Señales gratis · Canal VIP</span>
+        </div>
+        <div class="bs-m-subtitle">T4T Academy · Telegram</div>
+      </div>
+      <span class="bs-m-badge">100% GRATIS</span>
+      <button class="bs-m-btn">📲 Unirme gratis</button>
+    </div>
+
+  </div>
 
 </div><!-- /page-layout -->
 
@@ -655,6 +828,30 @@
 
     document.getElementById('calcBtn').addEventListener('click', calculate);
     document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+
+    // ── SIGNALS ROTATION ──
+    const SIGNALS = [
+      { pair: 'XAU/USD', dir: 'BUY',  time: 'hace 2 min'  },
+      { pair: 'EUR/USD', dir: 'SELL', time: 'hace 5 min'  },
+      { pair: 'GBP/USD', dir: 'BUY',  time: 'hace 8 min'  },
+      { pair: 'US30',    dir: 'SELL', time: 'hace 12 min' },
+      { pair: 'NAS100',  dir: 'BUY',  time: 'hace 15 min' },
+      { pair: 'USD/JPY', dir: 'SELL', time: 'hace 20 min' },
+    ];
+
+    let sigIdx = 0;
+    function rotateSignals() {
+      const s1 = document.getElementById('sig1');
+      const s2 = document.getElementById('sig2');
+      if (!s1 || !s2) return;
+      [s1, s2].forEach((el, i) => {
+        const s = SIGNALS[(sigIdx + i) % SIGNALS.length];
+        el.innerHTML = `<span class="bs-signal-pair">${s.pair}</span><span class="bs-dir-badge ${s.dir.toLowerCase()}">${s.dir}</span><span class="bs-signal-time">${s.time}</span>`;
+      });
+      sigIdx = (sigIdx + 1) % SIGNALS.length;
+    }
+    rotateSignals();
+    setInterval(rotateSignals, 2500);
   </script>
 </body>
 </html>
