@@ -563,6 +563,74 @@
       }
     }
 
+    /* ── MOBILE SIGNALS CARD ── */
+    .mobile-signals-card {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .mobile-signals-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        background: #13131f;
+        border: 1px solid #6c63ff55;
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin: 0 16px 20px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .msc-left {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .msc-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .msc-dot {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: #4ade80;
+        flex-shrink: 0;
+        animation: sigPulse 1.4s ease infinite;
+      }
+
+      .msc-title    { font-size: 13px; font-weight: 700; color: #fff; }
+      .msc-subtitle { font-size: 9px; color: #a89fff; }
+
+      .msc-badge {
+        font-size: 10px; font-weight: 700; color: #fff;
+        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+        border-radius: 20px;
+        padding: 5px 10px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        animation: glowBadge 2s ease infinite;
+      }
+
+      .msc-btn {
+        font-size: 11px; font-weight: 700; color: #fff;
+        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
+        border-radius: 8px;
+        padding: 9px 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+      }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 660px) {
       .hero { padding: 48px 20px 28px; }
@@ -604,6 +672,19 @@
     <button class="tab soon">Profit / Loss <span class="badge">Pronto</span></button>
     <button class="tab soon">Margen <span class="badge">Pronto</span></button>
   </div>
+
+  <!-- MOBILE SIGNALS CARD -->
+  <a class="mobile-signals-card" href="https://t.me/+vbUqQDmAeJA2NDFh" target="_blank" rel="noopener">
+    <div class="msc-left">
+      <div class="msc-top">
+        <span class="msc-dot"></span>
+        <span class="msc-title">SEÑALES GRATIS</span>
+      </div>
+      <span class="msc-subtitle">Canal VIP</span>
+    </div>
+    <span class="msc-badge">100% GRATIS</span>
+    <button class="msc-btn">📲 Unirme</button>
+  </a>
 
   <!-- CALCULATOR -->
   <div class="container">
