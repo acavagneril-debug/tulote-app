@@ -519,47 +519,17 @@
 
     .bs-footer-text { font-size: 7px; color: #3a3a5a; text-align: center; line-height: 1.5; }
 
-    /* ── MOBILE banner señales ── */
+    /* ── MOBILE layout fix ── */
     @media (max-width: 1024px) {
-      .page-layout { flex-wrap: wrap; }
-
-      .banner-signals {
-        width: 100%; height: auto;
-        position: static;
-        padding: 0 16px 24px;
+      .page-layout {
+        flex-direction: column;
       }
-
-      .bs-desktop { display: none; }
-
-      .bs-mobile {
-        display: flex; align-items: center; gap: 10px;
+      .main-col {
         width: 100%;
-        background: #0d0d1a;
-        border: 1px solid #6c63ff44;
-        border-radius: 12px;
-        padding: 14px 16px;
-        cursor: pointer;
       }
-
-      .bs-m-left    { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
-      .bs-m-live    { display: flex; align-items: center; gap: 5px; }
-      .bs-m-live-text  { font-size: 11px; color: #4ade80; font-weight: 600; white-space: nowrap; }
-      .bs-m-subtitle   { font-size: 9px; color: #5a5a7a; }
-
-      .bs-m-badge {
-        font-size: 10px; font-weight: 800; color: #fff;
-        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
-        border-radius: 8px; padding: 6px 10px;
-        white-space: nowrap; flex-shrink: 0;
-        animation: glowBadge 2s ease infinite;
-      }
-
-      .bs-m-btn {
-        background: linear-gradient(135deg, #6c63ff, #4f8ef7);
-        color: #fff; font-size: 10px; font-weight: 700;
-        padding: 8px 10px; border-radius: 8px;
-        white-space: nowrap; border: none; cursor: pointer;
-        font-family: inherit; flex-shrink: 0;
+      .banner-col,
+      .banner-signals {
+        display: none;
       }
     }
 
@@ -571,9 +541,11 @@
     @media (max-width: 1024px) {
       .mobile-signals-card {
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
+        width: calc(100% - 32px);
         background: #13131f;
         border: 1px solid #6c63ff55;
         border-radius: 14px;
@@ -581,6 +553,7 @@
         margin: 0 16px 20px;
         cursor: pointer;
         text-decoration: none;
+        box-sizing: border-box;
       }
 
       .msc-left {
