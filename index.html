@@ -403,6 +403,32 @@
       font-weight: 700;
     }
 
+    /* ── PAGE LAYOUT (banner + calculator + mirror) ── */
+    .page-layout {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .banner-col {
+      width: 148px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .banner-col { display: none; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 660px) {
       .hero { padding: 48px 20px 28px; }
@@ -419,6 +445,17 @@
   </style>
 </head>
 <body>
+<div class="page-layout">
+
+  <!-- BANNER IZQUIERDO XM -->
+  <div class="banner-col">
+    <a href="https://clicks.pipaffiliates.com/c?m=150425&c=635831" referrerpolicy="no-referrer-when-downgrade">
+      <img src="https://ads.pipaffiliates.com/i/150425?c=635831" width="120" height="600" referrerpolicy="no-referrer-when-downgrade" />
+    </a>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="main-col">
 
   <!-- HERO -->
   <div class="hero">
@@ -515,6 +552,13 @@
   <footer>
     <span>tulote.app</span> — Gestión de riesgo para traders profesionales
   </footer>
+
+  </div><!-- /main-col -->
+
+  <!-- ESPACIO DERECHO (reservado) -->
+  <div class="banner-col"></div>
+
+</div><!-- /page-layout -->
 
   <script>
     const PIP = {
