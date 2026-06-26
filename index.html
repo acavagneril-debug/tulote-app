@@ -295,6 +295,22 @@
     .modal-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,158,11,.12); }
     .modal-input::placeholder { color: #334155; }
 
+    .email-split {
+      display: flex; align-items: center;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 13px;
+      transition: border-color 0.18s, box-shadow 0.18s; overflow: hidden;
+    }
+    .email-split:focus-within { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,158,11,.12); }
+    .email-split input {
+      flex: 1; min-width: 0; background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 0.97rem; font-family: inherit; padding: 14px 0 14px 16px;
+    }
+    .email-split input::placeholder { color: #334155; }
+    .email-split .email-domain {
+      padding: 14px 16px 14px 4px; color: var(--muted);
+      font-size: 0.97rem; font-family: inherit; white-space: nowrap; flex-shrink: 0;
+    }
+
     .modal-submit {
       width: 100%; padding: 15px; border-radius: 14px; font-size: 1rem; font-weight: 700;
       border: none; background: var(--amber); color: #000;
@@ -793,7 +809,10 @@
 
       <form class="modal-form" id="modalForm" novalidate>
         <input class="modal-input" type="text" id="modalNombre" placeholder="Tu nombre" autocomplete="given-name" required />
-        <input class="modal-input" type="email" id="modalEmail" placeholder="tu@email.com" required />
+        <div class="email-split">
+          <input type="text" id="modalEmail" placeholder="tunombre" autocomplete="off" />
+          <span class="email-domain">@gmail.com</span>
+        </div>
         <button class="modal-submit" type="submit" id="modalSubmit">Desbloquear gratis →</button>
         <div class="modal-error" id="modalError"></div>
       </form>
@@ -928,13 +947,9 @@
     }
   }
 
-  // Capture-phase listener on email input: stops ALL propagation to document-level
-  // listeners (both handleModalKey and the global Enter handler). This is necessary
-  // on Mac Spanish keyboard where @ is Option+2 — the Option keydown event was
-  // reaching document listeners and interfering with text input.
-  document.getElementById('modalEmail').addEventListener('keydown', (e) => {
-    e.stopPropagation();
-  }, true);
+  // Capture-phase: stop all propagation from modal inputs to document listeners.
+  document.getElementById('modalEmail').addEventListener('keydown', e => e.stopPropagation(), true);
+  document.getElementById('modalNombre').addEventListener('keydown', e => e.stopPropagation(), true);
 
   document.getElementById('modalClose').addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
@@ -942,17 +957,16 @@
   // ── BREVO SUBMIT ────────────────────────────────────────
   document.getElementById('modalForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const nombre = document.getElementById('modalNombre').value.trim();
-    const email  = document.getElementById('modalEmail').value.trim();
-    const errEl  = document.getElementById('modalError');
-    const btn    = document.getElementById('modalSubmit');
+    const nombre    = document.getElementById('modalNombre').value.trim();
+    const emailUser = document.getElementById('modalEmail').value.trim();
+    const email     = emailUser + '@gmail.com';
+    const errEl     = document.getElementById('modalError');
+    const btn       = document.getElementById('modalSubmit');
 
     errEl.textContent = '';
 
-    if (!nombre) { errEl.textContent = 'Ingresa tu nombre.'; return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errEl.textContent = 'Ingresa un email válido.'; return;
-    }
+    if (!nombre)    { errEl.textContent = 'Ingresa tu nombre.'; return; }
+    if (!emailUser) { errEl.textContent = 'Ingresa tu usuario de Gmail.'; return; }
 
     btn.disabled = true;
     btn.textContent = 'Desbloqueando...';
