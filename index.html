@@ -913,6 +913,8 @@
   }
 
   function handleModalKey(e) {
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
     if (e.key === 'Escape') { closeModal(); return; }
     if (e.key === 'Tab') {
       const focusable = modalCard.querySelectorAll('input, button:not([disabled])');
@@ -925,6 +927,14 @@
       }
     }
   }
+
+  // Capture-phase listener on email input: stops ALL propagation to document-level
+  // listeners (both handleModalKey and the global Enter handler). This is necessary
+  // on Mac Spanish keyboard where @ is Option+2 — the Option keydown event was
+  // reaching document listeners and interfering with text input.
+  document.getElementById('modalEmail').addEventListener('keydown', (e) => {
+    e.stopPropagation();
+  }, true);
 
   document.getElementById('modalClose').addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
