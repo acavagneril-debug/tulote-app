@@ -807,12 +807,6 @@
 </div>
 
 <script>
-  // ── CONFIG ──────────────────────────────────────────────
-  // Replace with your real Brevo API key.
-  // For production, use a backend proxy to avoid exposing this key.
-  const BREVO_API_KEY  = 'YOUR_BREVO_API_KEY';
-  const BREVO_LIST_ID  = 2;
-
   // ── PIP VALUES & SIZES ──────────────────────────────────
   const PIP = {
     XAUUSD: 10, EURUSD: 10, GBPUSD: 10, EURGBP: 10,
@@ -954,22 +948,13 @@
     btn.textContent = 'Desbloqueando...';
 
     try {
-      const res = await fetch('https://api.brevo.com/v3/contacts', {
+      const res = await fetch('/.netlify/functions/subscribe', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
-        body: JSON.stringify({
-          email,
-          attributes: { NOMBRE: nombre, FUENTE: 'tulote.app' },
-          listIds: [BREVO_LIST_ID],
-          updateEnabled: true,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, nombre }),
       });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        const isDuplicate = res.status === 400 && (data.message || '').toLowerCase().includes('contact already exist');
-        if (!isDuplicate) throw new Error(data.message || `Error ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Error ${res.status}`);
 
       // Success
       unlockTools();
