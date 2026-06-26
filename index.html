@@ -15,6 +15,7 @@
       --muted:  #64748b;
       --gfrom:  #a78bfa;
       --gto:    #60a5fa;
+      --amber:  #F59E0B;
     }
 
     body {
@@ -26,404 +27,310 @@
     }
 
     /* ── HERO ── */
-    .hero {
-      text-align: center;
-      padding: 64px 20px 36px;
-    }
+    .hero { text-align: center; padding: 64px 20px 36px; }
 
     .hero-badge {
       display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--gfrom);
-      border: 1px solid rgba(167,139,250,.28);
-      border-radius: 100px;
-      padding: 5px 16px;
-      margin-bottom: 28px;
+      border: 1px solid rgba(167,139,250,.28); border-radius: 100px;
+      padding: 5px 16px; margin-bottom: 28px;
       background: rgba(167,139,250,.06);
     }
 
     .hero h1 {
-      font-size: clamp(2.8rem, 7vw, 4.5rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 1.1;
       background: linear-gradient(135deg, var(--gfrom) 0%, var(--gto) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       margin-bottom: 18px;
       filter: drop-shadow(0 0 40px rgba(167,139,250,.22));
     }
 
     .hero p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.6;
-      max-width: 420px;
-      margin: 0 auto;
+      color: var(--muted); font-size: 1.05rem; line-height: 1.6;
+      max-width: 480px; margin: 0 auto;
     }
 
     /* ── TABS ── */
     .tabs {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      padding: 0 20px 44px;
-      flex-wrap: wrap;
+      display: flex; justify-content: center; align-items: center;
+      gap: 8px; padding: 0 20px 44px; flex-wrap: wrap;
     }
 
     .tab {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 22px;
-      border-radius: 100px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 22px; border-radius: 100px;
+      font-size: 0.875rem; font-weight: 600;
+      border: none; cursor: pointer;
+      transition: all 0.2s; font-family: inherit; white-space: nowrap;
     }
 
     .tab.active {
       background: linear-gradient(135deg, var(--gfrom), var(--gto));
-      color: #fff;
-      box-shadow: 0 4px 24px rgba(167,139,250,.3);
+      color: #fff; box-shadow: 0 4px 24px rgba(167,139,250,.3);
     }
 
-    .tab.soon {
-      background: var(--card);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      cursor: default;
+    .tab:not(.active):not(.locked) {
+      background: var(--card); color: var(--muted); border: 1px solid var(--border);
     }
+    .tab:not(.active):not(.locked):hover { border-color: rgba(167,139,250,.4); color: var(--gfrom); }
 
-    .tab .badge {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      background: rgba(167,139,250,.18);
-      color: var(--gfrom);
-      border-radius: 100px;
-      padding: 2px 7px;
+    .tab.locked {
+      background: var(--card); color: var(--muted); border: 1px solid var(--border);
+      opacity: 0.65; cursor: pointer; position: relative;
     }
+    .tab.locked:hover { opacity: 0.85; }
+    .tab.locked::after {
+      content: 'Desbloquear gratis →';
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: #1e1e35; color: var(--gfrom); font-size: 0.7rem; font-weight: 600;
+      white-space: nowrap; padding: 4px 10px; border-radius: 6px; border: 1px solid #3a3a5a;
+      pointer-events: none; opacity: 0; transition: opacity 0.18s;
+    }
+    .tab.locked:hover::after { opacity: 1; }
 
     /* ── LAYOUT ── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      align-items: start;
-    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
     /* ── CARDS ── */
     .card, .result-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 32px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 22px; padding: 32px;
       animation: rise 0.45s cubic-bezier(.16,.68,.32,1) both;
     }
-
-    .result-card { animation-delay: 0.08s; }
+    .result-card { animation-delay: 0.08s; display: flex; flex-direction: column; }
 
     .card-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 28px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 28px;
     }
 
     /* ── FORM ── */
     .field { margin-bottom: 22px; }
-
-    .field label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
+    .field label { display: block; font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 8px; }
 
     .select-wrap { position: relative; }
-
     .select-wrap::after {
-      content: '';
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      border-left: 4px solid transparent;
-      border-right: 4px solid transparent;
-      border-top: 6px solid var(--muted);
-      pointer-events: none;
+      content: ''; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 6px solid var(--muted); pointer-events: none;
     }
 
-    .field select,
-    .field input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      color: var(--text);
-      font-size: 0.97rem;
-      font-family: inherit;
-      padding: 13px 16px;
-      outline: none;
+    .field select, .field input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 13px; color: var(--text); font-size: 0.97rem; font-family: inherit;
+      padding: 13px 16px; outline: none;
       transition: border-color 0.18s, box-shadow 0.18s;
-      appearance: none;
-      -webkit-appearance: none;
+      appearance: none; -webkit-appearance: none;
     }
-
     .field select { padding-right: 44px; cursor: pointer; }
-
-    .field select:focus,
-    .field input:focus {
-      border-color: var(--gfrom);
-      box-shadow: 0 0 0 3px rgba(167,139,250,.12);
+    .field select:focus, .field input:focus {
+      border-color: var(--gfrom); box-shadow: 0 0 0 3px rgba(167,139,250,.12);
     }
-
     .field input::placeholder { color: #334155; }
 
+    /* ── DIRECTION TOGGLE (P&L) ── */
+    .direction-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dir-btn {
+      padding: 11px; border-radius: 12px; font-size: 0.9rem; font-weight: 700;
+      border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+      cursor: pointer; transition: all 0.18s; font-family: inherit;
+    }
+    .dir-btn:hover:not(.active) { border-color: rgba(167,139,250,.4); color: var(--gfrom); }
+    .dir-btn.buy.active  { background: rgba(34,197,94,.15);  border-color: #22c55e; color: #22c55e; }
+    .dir-btn.sell.active { background: rgba(239,68,68,.15);  border-color: #ef4444; color: #ef4444; }
+
     /* ── RISK BUTTONS ── */
-    .risk-label {
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .risk-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 28px;
-    }
-
+    .risk-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); margin-bottom: 10px; }
+    .risk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 28px; }
     .risk-btn {
-      padding: 11px 6px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.18s;
-      font-family: inherit;
+      padding: 11px 6px; border-radius: 12px; font-size: 0.9rem; font-weight: 700;
+      border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+      cursor: pointer; transition: all 0.18s; font-family: inherit;
     }
-
-    .risk-btn:hover:not(.active) {
-      border-color: rgba(167,139,250,.5);
-      color: var(--gfrom);
-    }
-
+    .risk-btn:hover:not(.active) { border-color: rgba(167,139,250,.5); color: var(--gfrom); }
     .risk-btn.active {
       background: linear-gradient(135deg, var(--gfrom), var(--gto));
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(167,139,250,.28);
+      border-color: transparent; color: #fff; box-shadow: 0 4px 16px rgba(167,139,250,.28);
     }
 
     /* ── CALC BUTTON ── */
     .calc-btn {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      font-size: 0.97rem;
-      font-weight: 700;
-      border: none;
-      background: linear-gradient(135deg, var(--gfrom), var(--gto));
-      color: #fff;
-      cursor: pointer;
+      width: 100%; padding: 15px; border-radius: 14px; font-size: 0.97rem; font-weight: 700;
+      border: none; background: linear-gradient(135deg, var(--gfrom), var(--gto));
+      color: #fff; cursor: pointer;
       transition: opacity 0.18s, transform 0.12s, box-shadow 0.18s;
-      letter-spacing: 0.03em;
-      font-family: inherit;
+      letter-spacing: 0.03em; font-family: inherit;
       box-shadow: 0 4px 20px rgba(167,139,250,.3);
     }
-
     .calc-btn:hover  { opacity: 0.92; box-shadow: 0 6px 28px rgba(167,139,250,.4); }
     .calc-btn:active { transform: scale(0.985); opacity: 0.88; }
 
     /* ── RESULT ── */
-    .result-card {
-      display: flex;
-      flex-direction: column;
-    }
-
     .result-main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 28px 0 24px;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 28px 0 24px;
     }
 
     .result-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 18px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 18px;
     }
 
     .result-number {
-      font-size: clamp(3.2rem, 8vw, 5.5rem);
-      font-weight: 800;
-      letter-spacing: -0.05em;
-      line-height: 1;
-      margin-bottom: 14px;
-      transition: all 0.3s cubic-bezier(.16,.68,.32,1.2);
+      font-size: clamp(3.2rem, 8vw, 5.5rem); font-weight: 800;
+      letter-spacing: -0.05em; line-height: 1; margin-bottom: 14px;
     }
-
-    .result-number.has-value {
-      background: linear-gradient(135deg, var(--gfrom), var(--gto));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 0 30px rgba(167,139,250,.28));
-    }
-
     .result-number.empty { color: var(--border); }
+    .result-number.has-value {
+      color: var(--amber);
+      filter: drop-shadow(0 0 24px rgba(245,158,11,.35));
+      animation: resultPop 0.3s cubic-bezier(.16,.68,.32,1) both;
+    }
+
+    @keyframes resultPop {
+      from { opacity: 0; transform: scale(0.82); }
+      to   { opacity: 1; transform: scale(1); }
+    }
 
     .instr-badge {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      background: rgba(167,139,250,.1);
-      border: 1px solid rgba(167,139,250,.22);
-      color: var(--gfrom);
-      border-radius: 100px;
-      padding: 4px 14px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em;
+      background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.22);
+      color: var(--gfrom); border-radius: 100px; padding: 4px 14px;
       transition: opacity 0.25s;
     }
 
+    .risk-ok {
+      font-size: 0.8rem; font-weight: 600; color: #4ade80;
+      margin-top: 12px; opacity: 0; transition: opacity 0.4s;
+    }
+    .risk-ok.show { opacity: 1; }
+
+    /* ── P&L RESULT NUMBER ── */
+    .pl-result-number {
+      font-size: clamp(2.6rem, 7vw, 4.5rem); font-weight: 800;
+      letter-spacing: -0.05em; line-height: 1; margin-bottom: 14px;
+    }
+    .pl-result-number.empty  { color: var(--border); }
+    .pl-result-number.profit { color: #22c55e; animation: resultPop 0.3s cubic-bezier(.16,.68,.32,1) both; }
+    .pl-result-number.loss   { color: #ef4444; animation: resultPop 0.3s cubic-bezier(.16,.68,.32,1) both; }
+
     /* ── METRICS ── */
-    .divider {
-      height: 1px;
-      background: var(--border);
-      margin-top: 20px;
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
+    .divider { height: 1px; background: var(--border); margin-top: 20px; }
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
     .metric {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 12px;
-      text-align: center;
-      transition: border-color 0.2s;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 12px; text-align: center; transition: border-color 0.2s;
     }
-
     .metric.lit { border-color: rgba(167,139,250,.3); }
-
-    .metric-value {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 5px;
-      letter-spacing: -0.02em;
-    }
-
-    .metric-label {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-weight: 500;
-    }
+    .metric-value { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-bottom: 5px; letter-spacing: -0.02em; }
+    .metric-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
 
     /* ── RATE STATUS ── */
     .rate-status {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      margin-top: 14px;
-      font-size: 0.74rem;
-      color: var(--muted);
-      min-height: 1rem;
-      transition: opacity 0.3s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 7px; margin-top: 14px; font-size: 0.74rem; color: var(--muted);
+      min-height: 1rem; transition: opacity 0.3s;
     }
-
     .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: var(--muted);
-      transition: background 0.3s;
+      width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+      background: var(--muted); transition: background 0.3s;
     }
-
     .status-dot.live      { background: #4ade80; }
     .status-dot.estimated { background: #fb923c; }
-    .status-dot.loading   { background: var(--muted); animation: pulse 1.2s ease infinite; }
+    .status-dot.loading   { animation: pulse 1.2s ease infinite; }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+    /* ── MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,.75);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.25s;
     }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+
+    .modal-card {
+      background: #0f0f1a; border: 1px solid #1e1e35; border-radius: 24px;
+      padding: 40px 36px; width: 100%; max-width: 440px; position: relative;
+      transform: translateY(16px) scale(0.96);
+      transition: transform 0.28s cubic-bezier(.16,.68,.32,1);
+    }
+    .modal-backdrop.open .modal-card { transform: translateY(0) scale(1); }
+
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.4rem; cursor: pointer; padding: 4px 8px; border-radius: 8px;
+      transition: color 0.18s, background 0.18s; line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); background: rgba(255,255,255,.05); }
+
+    .modal-lock { font-size: 2.5rem; text-align: center; margin-bottom: 20px; transition: all 0.4s; }
+
+    .modal-title {
+      font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 8px; text-align: center;
+    }
+    .modal-subtitle {
+      font-size: 0.88rem; color: var(--muted); text-align: center;
+      line-height: 1.6; margin-bottom: 28px;
+    }
+
+    .modal-form { display: flex; flex-direction: column; gap: 12px; }
+
+    .modal-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 13px; color: var(--text); font-size: 0.97rem; font-family: inherit;
+      padding: 14px 16px; outline: none; transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .modal-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(245,158,11,.12); }
+    .modal-input::placeholder { color: #334155; }
+
+    .modal-submit {
+      width: 100%; padding: 15px; border-radius: 14px; font-size: 1rem; font-weight: 700;
+      border: none; background: var(--amber); color: #000;
+      cursor: pointer; transition: opacity 0.18s, transform 0.12s; font-family: inherit;
+      margin-top: 4px;
+    }
+    .modal-submit:hover  { opacity: 0.9; }
+    .modal-submit:active { transform: scale(0.985); }
+    .modal-submit:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .modal-error { font-size: 0.82rem; color: #ef4444; text-align: center; min-height: 1.2em; margin-top: 4px; }
+
+    .modal-success { text-align: center; padding: 16px 0; }
+    .modal-success-icon { font-size: 3rem; margin-bottom: 12px; }
+    .modal-success-text { font-size: 1.05rem; font-weight: 700; color: #4ade80; }
 
     /* ── FOOTER ── */
     footer {
-      text-align: center;
-      padding: 24px 20px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      border-top: 1px solid var(--border);
+      text-align: center; padding: 24px 20px; color: var(--muted);
+      font-size: 0.78rem; border-top: 1px solid var(--border);
     }
-
     footer span {
       background: linear-gradient(135deg, var(--gfrom), var(--gto));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 700;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; font-weight: 700;
     }
 
-    /* ── PAGE LAYOUT (banner + calculator + mirror) ── */
-    .page-layout {
-      display: flex;
-      align-items: flex-start;
-    }
+    /* ── PAGE LAYOUT ── */
+    .page-layout { display: flex; align-items: flex-start; }
 
     .banner-col {
-      width: 160px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 160px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .main-col {
-      flex: 1;
-      min-width: 0;
-    }
+    .main-col { flex: 1; min-width: 0; }
 
     @media (max-width: 1024px) {
       .banner-col { display: none; }
@@ -431,46 +338,26 @@
 
     /* ── BANNER SEÑALES ── */
     .banner-signals {
-      width: 160px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 4px;
+      width: 160px; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 0 4px;
     }
 
     .bs-desktop {
-      width: 100%;
-      height: 600px;
-      background: #0d0d1a;
-      border: 1px solid #6c63ff44;
-      border-radius: 12px;
-      padding: 16px 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      overflow: hidden;
+      width: 100%; height: 600px;
+      background: #0d0d1a; border: 1px solid #6c63ff44; border-radius: 12px;
+      padding: 16px 12px; display: flex; flex-direction: column;
+      justify-content: space-between; cursor: pointer; overflow: hidden;
     }
-
     .bs-mobile { display: none; }
 
     .bs-live-row { display: flex; align-items: center; gap: 5px; }
-
     .bs-live-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #4ade80;
-      flex-shrink: 0;
-      animation: sigPulse 1.4s ease infinite;
+      width: 6px; height: 6px; border-radius: 50%; background: #4ade80;
+      flex-shrink: 0; animation: sigPulse 1.4s ease infinite;
     }
-
     @keyframes sigPulse {
-      0%, 100% { opacity:1; box-shadow: 0 0 0 0 rgba(74,222,128,.6); }
-      60%       { box-shadow: 0 0 0 5px rgba(74,222,128,0); }
+      0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(74,222,128,.6); }
+      60%      { box-shadow: 0 0 0 5px rgba(74,222,128,0); }
     }
 
     .bs-live-text { font-size: 11px; color: #4ade80; font-weight: 600; letter-spacing: .04em; }
@@ -478,29 +365,23 @@
     .bs-subtitle  { font-size: 12px; color: #a89fff; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; }
 
     .bs-gratis-badge {
-      display: inline-block;
-      font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .05em;
-      background: linear-gradient(135deg, #6c63ff, #4f8ef7);
-      border-radius: 6px; padding: 4px 8px;
+      display: inline-block; font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .05em;
+      background: linear-gradient(135deg, #6c63ff, #4f8ef7); border-radius: 6px; padding: 4px 8px;
       animation: glowBadge 2s ease infinite;
     }
-
     @keyframes glowBadge {
-      0%, 100% { box-shadow: 0 0 8px rgba(108,99,255,.4); }
-      50%       { box-shadow: 0 0 20px rgba(108,99,255,.9), 0 0 35px rgba(108,99,255,.3); }
+      0%,100% { box-shadow: 0 0 8px rgba(108,99,255,.4); }
+      50%      { box-shadow: 0 0 20px rgba(108,99,255,.9), 0 0 35px rgba(108,99,255,.3); }
     }
 
     .bs-divider      { height: 1px; background: rgba(108,99,255,.2); }
     .bs-signal-label { font-size: 8px; color: #4a4a6a; font-weight: 500; }
-
-    .bs-signal-row  { display: flex; align-items: center; gap: 3px; min-height: 20px; }
-    .bs-signal-pair { font-size: 12px; font-weight: 700; color: #e2e8f0; flex: 1; }
-
-    .bs-dir-badge { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: .04em; }
+    .bs-signal-row   { display: flex; align-items: center; gap: 3px; min-height: 20px; }
+    .bs-signal-pair  { font-size: 12px; font-weight: 700; color: #e2e8f0; flex: 1; }
+    .bs-dir-badge    { font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: .04em; }
     .bs-dir-badge.buy  { background: rgba(34,197,94,.18);  color: #22c55e; }
     .bs-dir-badge.sell { background: rgba(239,68,68,.18);  color: #ef4444; }
-
-    .bs-signal-time { font-size: 7px; color: #3a3a5a; flex-shrink: 0; }
+    .bs-signal-time  { font-size: 7px; color: #3a3a5a; flex-shrink: 0; }
 
     .bs-checks { display: flex; flex-direction: column; gap: 5px; }
     .bs-check  { font-size: 11px; color: #7a7a9a; display: flex; gap: 4px; line-height: 1.4; }
@@ -519,88 +400,41 @@
 
     .bs-footer-text { font-size: 7px; color: #3a3a5a; text-align: center; line-height: 1.5; }
 
-    /* ── MOBILE layout fix ── */
+    /* ── MOBILE layout ── */
     @media (max-width: 1024px) {
-      .page-layout {
-        flex-direction: column;
-      }
-      .main-col {
-        width: 100%;
-      }
-      .banner-col,
-      .banner-signals {
-        display: none;
-      }
+      .page-layout { flex-direction: column; }
+      .main-col    { width: 100%; }
+      .banner-col, .banner-signals { display: none; }
     }
 
     /* ── MOBILE SIGNALS CARD ── */
-    .mobile-signals-card {
-      display: none;
-    }
+    .mobile-signals-card { display: none; }
 
     @media (max-width: 1024px) {
       .mobile-signals-card {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
+        display: flex; flex-direction: row; align-items: center;
+        justify-content: space-between; gap: 8px;
         width: calc(100% - 32px);
-        background: #13131f;
-        border: 1px solid #6c63ff55;
-        border-radius: 14px;
-        padding: 12px 14px;
-        margin: 0 16px 20px;
-        cursor: pointer;
-        text-decoration: none;
-        box-sizing: border-box;
+        background: #13131f; border: 1px solid #6c63ff55; border-radius: 14px;
+        padding: 12px 14px; margin: 0 16px 24px;
+        cursor: pointer; text-decoration: none; box-sizing: border-box;
       }
-
-      .msc-left {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        flex: 1;
-        min-width: 0;
-      }
-
-      .msc-top {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .msc-dot {
-        width: 7px; height: 7px;
-        border-radius: 50%;
-        background: #4ade80;
-        flex-shrink: 0;
-        animation: sigPulse 1.4s ease infinite;
-      }
-
+      .msc-left     { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+      .msc-top      { display: flex; align-items: center; gap: 6px; }
+      .msc-dot      { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; flex-shrink: 0; animation: sigPulse 1.4s ease infinite; }
       .msc-title    { font-size: 13px; font-weight: 700; color: #fff; }
       .msc-subtitle { font-size: 9px; color: #a89fff; }
-
       .msc-badge {
         font-size: 10px; font-weight: 700; color: #fff;
         background: linear-gradient(135deg, #6c63ff, #4f8ef7);
-        border-radius: 20px;
-        padding: 5px 10px;
-        white-space: nowrap;
-        flex-shrink: 0;
-        animation: glowBadge 2s ease infinite;
+        border-radius: 20px; padding: 5px 10px;
+        white-space: nowrap; flex-shrink: 0; animation: glowBadge 2s ease infinite;
       }
-
       .msc-btn {
         font-size: 11px; font-weight: 700; color: #fff;
         background: linear-gradient(135deg, #6c63ff, #4f8ef7);
-        border-radius: 8px;
-        padding: 9px 12px;
-        white-space: nowrap;
-        flex-shrink: 0;
-        border: none;
-        cursor: pointer;
-        font-family: inherit;
+        border-radius: 8px; padding: 9px 12px;
+        white-space: nowrap; flex-shrink: 0; border: none; cursor: pointer; font-family: inherit;
       }
     }
 
@@ -611,11 +445,19 @@
       .grid { grid-template-columns: 1fr; }
       .card, .result-card { padding: 24px 20px; }
       .result-number { font-size: 3.6rem; }
+      .modal-card { padding: 32px 24px; }
     }
 
     @keyframes rise {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
@@ -632,121 +474,287 @@
   <!-- CONTENIDO PRINCIPAL -->
   <div class="main-col">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-badge">Herramienta para Traders</div>
-    <h1>Tu Lote</h1>
-    <p>Calcula el tamaño de lote exacto para cada operación con gestión de riesgo profesional.</p>
-  </div>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active">Lot Size</button>
-    <button class="tab soon">Profit / Loss <span class="badge">Pronto</span></button>
-    <button class="tab soon">Margen <span class="badge">Pronto</span></button>
-  </div>
-
-  <!-- MOBILE SIGNALS CARD -->
-  <a class="mobile-signals-card" href="https://t.me/+vbUqQDmAeJA2NDFh" target="_blank" rel="noopener">
-    <div class="msc-left">
-      <div class="msc-top">
-        <span class="msc-dot"></span>
-        <span class="msc-title">SEÑALES GRATIS</span>
-      </div>
-      <span class="msc-subtitle">Canal VIP</span>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">Gestión de riesgo profesional</div>
+      <h1>Calcula tu lote.<br>Protege tu cuenta.</h1>
+      <p>La herramienta que usan traders rentables para no reventar su cuenta en una sola operación.</p>
     </div>
-    <span class="msc-badge">100% GRATIS</span>
-    <button class="msc-btn">📲 Unirme</button>
-  </a>
 
-  <!-- CALCULATOR -->
-  <div class="container">
-    <div class="grid">
-
-      <!-- FORM -->
-      <div class="card">
-        <div class="card-title">Parámetros</div>
-
-        <div class="field">
-          <label for="instrument">Instrumento</label>
-          <div class="select-wrap">
-            <select id="instrument">
-              <option value="XAUUSD">XAUUSD — Oro / Dólar</option>
-              <option value="EURUSD">EURUSD — Euro / Dólar</option>
-              <option value="GBPUSD">GBPUSD — Libra / Dólar</option>
-              <option value="EURGBP">EURGBP — Euro / Libra</option>
-              <option value="USDJPY">USDJPY — Dólar / Yen</option>
-              <option value="GBPJPY">GBPJPY — Libra / Yen</option>
-              <option value="EURJPY">EURJPY — Euro / Yen</option>
-              <option value="NZDUSD">NZDUSD — Kiwi / Dólar</option>
-              <option value="NAS100">NAS100 — Nasdaq 100</option>
-              <option value="SPX500">SPX500 — S&amp;P 500</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field">
-          <label for="balance">Capital de la cuenta (USD)</label>
-          <input type="number" id="balance" placeholder="Ej: 10000" min="0" step="any" />
-        </div>
-
-        <div class="field">
-          <label for="sl">Stop Loss (pips)</label>
-          <input type="number" id="sl" placeholder="Ej: 20" min="0" step="any" />
-        </div>
-
-        <div class="risk-label">Riesgo por operación</div>
-        <div class="risk-grid">
-          <button class="risk-btn" data-risk="1">1%</button>
-          <button class="risk-btn active" data-risk="2">2%</button>
-          <button class="risk-btn" data-risk="3">3%</button>
-          <button class="risk-btn" data-risk="5">5%</button>
-        </div>
-
-        <button class="calc-btn" id="calcBtn">Calcular Lotaje</button>
-        <div class="rate-status" id="rateStatus">
-          <span class="status-dot loading" id="statusDot"></span>
-          <span id="statusText">Cargando precios...</span>
-        </div>
-      </div>
-
-      <!-- RESULT -->
-      <div class="result-card">
-        <div class="card-title">Resultado</div>
-
-        <div class="result-main">
-          <div class="result-label">Tamaño del lote</div>
-          <div class="result-number empty" id="resultNum">—</div>
-          <div class="instr-badge" id="instrBadge" style="opacity:0">—</div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="metrics">
-          <div class="metric" id="mRisk">
-            <div class="metric-value" id="moneyRisk">—</div>
-            <div class="metric-label">Dinero en riesgo</div>
-          </div>
-          <div class="metric" id="mPip">
-            <div class="metric-value" id="pipVal">—</div>
-            <div class="metric-label">Valor por pip</div>
-          </div>
-        </div>
-      </div>
-
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-panel="lotsize">Lot Size</button>
+      <button class="tab locked" id="tab-pl" data-panel="pl">Profit / Loss 🔒</button>
+      <button class="tab locked" id="tab-margin" data-panel="margin">Margen 🔒</button>
     </div>
-  </div>
 
-  <footer>
-    <span>tulote.app</span> — Gestión de riesgo para traders profesionales
-  </footer>
+    <!-- ══════════════════════════════════════ -->
+    <!-- PANEL: LOT SIZE                        -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="panel-lotsize" class="tab-panel active">
+      <div class="container">
+        <div class="grid">
+
+          <!-- FORM -->
+          <div class="card">
+            <div class="card-title">Parámetros</div>
+
+            <div class="field">
+              <label for="instrument">Instrumento</label>
+              <div class="select-wrap">
+                <select id="instrument">
+                  <option value="XAUUSD">XAUUSD — Oro / Dólar</option>
+                  <option value="EURUSD">EURUSD — Euro / Dólar</option>
+                  <option value="GBPUSD">GBPUSD — Libra / Dólar</option>
+                  <option value="EURGBP">EURGBP — Euro / Libra</option>
+                  <option value="USDJPY">USDJPY — Dólar / Yen</option>
+                  <option value="GBPJPY">GBPJPY — Libra / Yen</option>
+                  <option value="EURJPY">EURJPY — Euro / Yen</option>
+                  <option value="NZDUSD">NZDUSD — Kiwi / Dólar</option>
+                  <option value="NAS100">NAS100 — Nasdaq 100</option>
+                  <option value="SPX500">SPX500 — S&amp;P 500</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="balance">Capital de la cuenta (USD)</label>
+              <input type="number" id="balance" placeholder="Ej: 10000" min="0" step="any" />
+            </div>
+
+            <div class="field">
+              <label for="sl">Stop Loss (pips)</label>
+              <input type="number" id="sl" placeholder="Ej: 20" min="0" step="any" />
+            </div>
+
+            <div class="risk-label">Riesgo por operación</div>
+            <div class="risk-grid">
+              <button class="risk-btn" data-risk="1">1%</button>
+              <button class="risk-btn active" data-risk="2">2%</button>
+              <button class="risk-btn" data-risk="3">3%</button>
+              <button class="risk-btn" data-risk="5">5%</button>
+            </div>
+
+            <button class="calc-btn" id="calcBtn">Calcular Lotaje</button>
+            <div class="rate-status" id="rateStatus">
+              <span class="status-dot loading" id="statusDot"></span>
+              <span id="statusText">Cargando precios...</span>
+            </div>
+          </div>
+
+          <!-- RESULT -->
+          <div class="result-card">
+            <div class="card-title">Resultado</div>
+            <div class="result-main">
+              <div class="result-label">Tamaño del lote</div>
+              <div class="result-number empty" id="resultNum">—</div>
+              <div class="instr-badge" id="instrBadge" style="opacity:0">—</div>
+              <div class="risk-ok" id="riskOk">Riesgo controlado ✓</div>
+            </div>
+            <div class="divider"></div>
+            <div class="metrics">
+              <div class="metric" id="mRisk">
+                <div class="metric-value" id="moneyRisk">—</div>
+                <div class="metric-label">Dinero en riesgo</div>
+              </div>
+              <div class="metric" id="mPip">
+                <div class="metric-value" id="pipVal">—</div>
+                <div class="metric-label">Valor por pip</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MOBILE SIGNALS CARD — after result (point 7) -->
+      <a class="mobile-signals-card" href="https://t.me/+vbUqQDmAeJA2NDFh" target="_blank" rel="noopener">
+        <div class="msc-left">
+          <div class="msc-top">
+            <span class="msc-dot"></span>
+            <span class="msc-title">SEÑALES GRATIS</span>
+          </div>
+          <span class="msc-subtitle">Canal VIP</span>
+        </div>
+        <span class="msc-badge">100% GRATIS</span>
+        <button class="msc-btn">📲 Unirme</button>
+      </a>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- PANEL: PROFIT / LOSS                   -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="panel-pl" class="tab-panel">
+      <div class="container">
+        <div class="grid">
+
+          <div class="card">
+            <div class="card-title">Profit / Loss</div>
+
+            <div class="field">
+              <label for="pl-instrument">Instrumento</label>
+              <div class="select-wrap">
+                <select id="pl-instrument">
+                  <option value="XAUUSD">XAUUSD — Oro / Dólar</option>
+                  <option value="EURUSD">EURUSD — Euro / Dólar</option>
+                  <option value="GBPUSD">GBPUSD — Libra / Dólar</option>
+                  <option value="EURGBP">EURGBP — Euro / Libra</option>
+                  <option value="USDJPY">USDJPY — Dólar / Yen</option>
+                  <option value="GBPJPY">GBPJPY — Libra / Yen</option>
+                  <option value="EURJPY">EURJPY — Euro / Yen</option>
+                  <option value="NZDUSD">NZDUSD — Kiwi / Dólar</option>
+                  <option value="NAS100">NAS100 — Nasdaq 100</option>
+                  <option value="SPX500">SPX500 — S&amp;P 500</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Tipo de operación</label>
+              <div class="direction-toggle">
+                <button class="dir-btn buy active" id="pl-buy">BUY</button>
+                <button class="dir-btn sell" id="pl-sell">SELL</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="pl-entry">Precio de entrada</label>
+              <input type="number" id="pl-entry" placeholder="Ej: 1.0850" step="any" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="pl-close">Precio de cierre</label>
+              <input type="number" id="pl-close" placeholder="Ej: 1.0870" step="any" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="pl-lots">Tamaño de lote</label>
+              <input type="number" id="pl-lots" placeholder="Ej: 0.50" step="any" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="pl-sl">SL en pips — opcional (para ratio RR)</label>
+              <input type="number" id="pl-sl" placeholder="Ej: 20" step="any" min="0" />
+            </div>
+
+            <button class="calc-btn" id="plCalcBtn">Calcular P&amp;L</button>
+          </div>
+
+          <div class="result-card">
+            <div class="card-title">Resultado</div>
+            <div class="result-main">
+              <div class="result-label">Profit / Loss</div>
+              <div class="pl-result-number empty" id="plResultNum">—</div>
+              <div class="instr-badge" id="plInstrBadge" style="opacity:0">—</div>
+            </div>
+            <div class="divider"></div>
+            <div class="metrics">
+              <div class="metric" id="plMPips">
+                <div class="metric-value" id="plPips">—</div>
+                <div class="metric-label">Pips</div>
+              </div>
+              <div class="metric" id="plMRR">
+                <div class="metric-value" id="plRR">—</div>
+                <div class="metric-label">Ratio RR</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- PANEL: MARGEN                          -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="panel-margin" class="tab-panel">
+      <div class="container">
+        <div class="grid">
+
+          <div class="card">
+            <div class="card-title">Margen</div>
+
+            <div class="field">
+              <label for="mg-instrument">Instrumento</label>
+              <div class="select-wrap">
+                <select id="mg-instrument">
+                  <option value="XAUUSD">XAUUSD — Oro / Dólar</option>
+                  <option value="EURUSD">EURUSD — Euro / Dólar</option>
+                  <option value="GBPUSD">GBPUSD — Libra / Dólar</option>
+                  <option value="EURGBP">EURGBP — Euro / Libra</option>
+                  <option value="USDJPY">USDJPY — Dólar / Yen</option>
+                  <option value="GBPJPY">GBPJPY — Libra / Yen</option>
+                  <option value="EURJPY">EURJPY — Euro / Yen</option>
+                  <option value="NZDUSD">NZDUSD — Kiwi / Dólar</option>
+                  <option value="NAS100">NAS100 — Nasdaq 100</option>
+                  <option value="SPX500">SPX500 — S&amp;P 500</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mg-lots">Tamaño de lote</label>
+              <input type="number" id="mg-lots" placeholder="Ej: 1.00" step="any" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="mg-price">Precio actual</label>
+              <input type="number" id="mg-price" placeholder="Ej: 1.0850" step="any" min="0" />
+            </div>
+
+            <div class="field">
+              <label for="mg-leverage">Apalancamiento</label>
+              <div class="select-wrap">
+                <select id="mg-leverage">
+                  <option value="50">50:1</option>
+                  <option value="100" selected>100:1</option>
+                  <option value="200">200:1</option>
+                  <option value="500">500:1</option>
+                  <option value="1000">1000:1</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="mg-capital">Capital de la cuenta (USD) — opcional</label>
+              <input type="number" id="mg-capital" placeholder="Ej: 10000" step="any" min="0" />
+            </div>
+
+            <button class="calc-btn" id="mgCalcBtn">Calcular Margen</button>
+          </div>
+
+          <div class="result-card">
+            <div class="card-title">Resultado</div>
+            <div class="result-main">
+              <div class="result-label">Margen requerido</div>
+              <div class="result-number empty" id="mgResultNum">—</div>
+              <div class="instr-badge" id="mgInstrBadge" style="opacity:0">—</div>
+            </div>
+            <div class="divider"></div>
+            <div class="metrics">
+              <div class="metric" id="mgMPct">
+                <div class="metric-value" id="mgPct">—</div>
+                <div class="metric-label">% del capital</div>
+              </div>
+              <div class="metric" id="mgMLeft">
+                <div class="metric-value" id="mgLeft">—</div>
+                <div class="metric-label">Margen libre</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span>tulote.app</span> — Gestión de riesgo para traders profesionales
+    </footer>
 
   </div><!-- /main-col -->
 
   <!-- BANNER SEÑALES DERECHO -->
   <div class="banner-signals">
-
-    <!-- DESKTOP vertical -->
     <div class="bs-desktop" onclick="window.open('https://t.me/+vbUqQDmAeJA2NDFh','_blank')">
       <div class="bs-live-row">
         <span class="bs-live-dot"></span>
@@ -769,143 +777,415 @@
       <button class="bs-btn">📲 Unirme gratis</button>
       <div class="bs-footer-text">Canal Telegram · T4T Academy</div>
     </div>
-
-    <!-- MOBILE horizontal -->
-    <div class="bs-mobile" onclick="window.open('https://t.me/+vbUqQDmAeJA2NDFh','_blank')">
-      <div class="bs-m-left">
-        <div class="bs-m-live">
-          <span class="bs-live-dot"></span>
-          <span class="bs-m-live-text">Señales gratis · Canal VIP</span>
-        </div>
-        <div class="bs-m-subtitle">T4T Academy · Telegram</div>
-      </div>
-      <span class="bs-m-badge">100% GRATIS</span>
-      <button class="bs-m-btn">📲 Unirme gratis</button>
-    </div>
-
   </div>
 
 </div><!-- /page-layout -->
 
-  <script>
-    const PIP = {
-      XAUUSD: 10,
-      EURUSD: 10,
-      GBPUSD: 10,
-      EURGBP: 10,
-      NZDUSD: 10,
-      NAS100: 1,
-      SPX500: 1,
-    };
+<!-- ══ MODAL DE DESBLOQUEO ══ -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card" id="modalCard">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
 
-    let jpyRates = { USDJPY: 157, GBPJPY: 200, EURJPY: 170 };
+    <div id="modalBody">
+      <div class="modal-lock" id="modalLock">🔒</div>
+      <div class="modal-title" id="modalTitle">Desbloquea las herramientas completas</div>
+      <div class="modal-subtitle">Accede gratis a Profit/Loss y Margen — sin spam, sin trampa.</div>
 
-    function pipForInstrument(instrument) {
-      if (instrument in jpyRates) return (0.01 / jpyRates[instrument]) * 100000;
-      return PIP[instrument];
-    }
+      <form class="modal-form" id="modalForm" novalidate>
+        <input class="modal-input" type="text" id="modalNombre" placeholder="Tu nombre" autocomplete="given-name" required />
+        <input class="modal-input" type="email" id="modalEmail" placeholder="tu@email.com" autocomplete="email" required />
+        <button class="modal-submit" type="submit" id="modalSubmit">Desbloquear gratis →</button>
+        <div class="modal-error" id="modalError"></div>
+      </form>
+    </div>
 
-    function setRateStatus(state) {
-      const dot  = document.getElementById('statusDot');
-      const text = document.getElementById('statusText');
-      dot.className = 'status-dot ' + state;
-      text.textContent = state === 'live' ? 'Precios en tiempo real ✓' : 'Precio estimado';
-    }
+    <div class="modal-success" id="modalSuccess" style="display:none">
+      <div class="modal-success-icon">✅</div>
+      <div class="modal-success-text">¡Listo! Acceso desbloqueado</div>
+    </div>
+  </div>
+</div>
 
-    const JPY_PAIRS = [
-      { pair: 'USDJPY', from: 'USD' },
-      { pair: 'GBPJPY', from: 'GBP' },
-      { pair: 'EURJPY', from: 'EUR' },
-    ];
+<script>
+  // ── CONFIG ──────────────────────────────────────────────
+  // Replace with your real Brevo API key.
+  // For production, use a backend proxy to avoid exposing this key.
+  const BREVO_API_KEY  = 'YOUR_BREVO_API_KEY';
+  const BREVO_LIST_ID  = 2;
 
-    Promise.allSettled(
-      JPY_PAIRS.map(({ pair, from }) =>
-        fetch(`https://api.frankfurter.app/latest?from=${from}&to=JPY`)
-          .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-          .then(data => { jpyRates[pair] = data.rates.JPY; })
-      )
-    ).then(results => {
-      const allOk = results.every(r => r.status === 'fulfilled');
-      setRateStatus(allOk ? 'live' : 'estimated');
+  // ── PIP VALUES & SIZES ──────────────────────────────────
+  const PIP = {
+    XAUUSD: 10, EURUSD: 10, GBPUSD: 10, EURGBP: 10,
+    NZDUSD: 10, NAS100: 1,  SPX500: 1,
+  };
+
+  // Price movement corresponding to 1 pip per instrument
+  const PIP_SIZE = {
+    XAUUSD: 0.10, EURUSD: 0.0001, GBPUSD: 0.0001,
+    EURGBP: 0.0001, NZDUSD: 0.0001,
+    USDJPY: 0.01, GBPJPY: 0.01, EURJPY: 0.01,
+    NAS100: 1, SPX500: 1,
+  };
+
+  // Contract sizes (units per standard lot)
+  const CONTRACT_SIZE = {
+    XAUUSD: 100, EURUSD: 100000, GBPUSD: 100000,
+    EURGBP: 100000, NZDUSD: 100000,
+    USDJPY: 100000, GBPJPY: 100000, EURJPY: 100000,
+    NAS100: 1, SPX500: 1,
+  };
+
+  let jpyRates = { USDJPY: 157, GBPJPY: 200, EURJPY: 170 };
+
+  function pipForInstrument(instr) {
+    if (instr in jpyRates) return (0.01 / jpyRates[instr]) * 100000;
+    return PIP[instr];
+  }
+
+  // ── JPY RATES ───────────────────────────────────────────
+  function setRateStatus(state) {
+    const dot  = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    if (!dot || !text) return;
+    dot.className = 'status-dot ' + state;
+    text.textContent = state === 'live' ? 'Precios en tiempo real ✓' : 'Precio estimado';
+  }
+
+  Promise.allSettled([
+    { pair: 'USDJPY', from: 'USD' },
+    { pair: 'GBPJPY', from: 'GBP' },
+    { pair: 'EURJPY', from: 'EUR' },
+  ].map(({ pair, from }) =>
+    fetch(`https://api.frankfurter.app/latest?from=${from}&to=JPY`)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(d => { jpyRates[pair] = d.rates.JPY; })
+  )).then(results => {
+    setRateStatus(results.every(r => r.status === 'fulfilled') ? 'live' : 'estimated');
+  });
+
+  // ── UNLOCK STATE ────────────────────────────────────────
+  let isUnlocked = localStorage.getItem('tulote_unlocked') === 'true';
+  let pendingPanel = null;
+
+  function applyUnlockedState() {
+    document.querySelectorAll('.tab.locked').forEach(tab => {
+      tab.classList.remove('locked');
     });
+  }
 
-    let risk = 2;
+  if (isUnlocked) applyUnlockedState();
 
-    document.querySelectorAll('.risk-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        risk = parseFloat(btn.dataset.risk);
+  // ── TAB SWITCHING ───────────────────────────────────────
+  function switchPanel(panelId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + panelId)?.classList.add('active');
+    document.querySelector(`[data-panel="${panelId}"]`)?.classList.add('active');
+  }
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const panel = tab.dataset.panel;
+      if (tab.classList.contains('locked')) {
+        pendingPanel = panel;
+        openModal();
+      } else {
+        switchPanel(panel);
+      }
+    });
+  });
+
+  // ── MODAL ───────────────────────────────────────────────
+  const backdrop = document.getElementById('modalBackdrop');
+  const modalCard = document.getElementById('modalCard');
+
+  function openModal() {
+    backdrop.classList.add('open');
+    document.getElementById('modalNombre').focus();
+    document.addEventListener('keydown', handleModalKey);
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('open');
+    document.removeEventListener('keydown', handleModalKey);
+    // reset form
+    setTimeout(() => {
+      document.getElementById('modalBody').style.display = '';
+      document.getElementById('modalSuccess').style.display = 'none';
+      document.getElementById('modalForm').reset();
+      document.getElementById('modalError').textContent = '';
+      document.getElementById('modalLock').textContent = '🔒';
+    }, 300);
+  }
+
+  function handleModalKey(e) {
+    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key === 'Tab') {
+      const focusable = modalCard.querySelectorAll('input, button:not([disabled])');
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    }
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+
+  // ── BREVO SUBMIT ────────────────────────────────────────
+  document.getElementById('modalForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const nombre = document.getElementById('modalNombre').value.trim();
+    const email  = document.getElementById('modalEmail').value.trim();
+    const errEl  = document.getElementById('modalError');
+    const btn    = document.getElementById('modalSubmit');
+
+    errEl.textContent = '';
+
+    if (!nombre) { errEl.textContent = 'Ingresa tu nombre.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.textContent = 'Ingresa un email válido.'; return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Desbloqueando...';
+
+    try {
+      const res = await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'api-key': BREVO_API_KEY },
+        body: JSON.stringify({
+          email,
+          attributes: { NOMBRE: nombre, FUENTE: 'tulote.app' },
+          listIds: [BREVO_LIST_ID],
+          updateEnabled: true,
+        }),
       });
-    });
 
-    function money(n) {
-      return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function calculate() {
-      const instrument = document.getElementById('instrument').value;
-      const balance    = parseFloat(document.getElementById('balance').value);
-      const sl         = parseFloat(document.getElementById('sl').value);
-
-      const numEl   = document.getElementById('resultNum');
-      const badge   = document.getElementById('instrBadge');
-      const riskEl  = document.getElementById('moneyRisk');
-      const pipEl   = document.getElementById('pipVal');
-
-      if (!balance || !sl || balance <= 0 || sl <= 0) {
-        numEl.textContent = '—';
-        numEl.className   = 'result-number empty';
-        badge.style.opacity = '0';
-        riskEl.textContent = '—';
-        pipEl.textContent  = '—';
-        document.getElementById('mRisk').classList.remove('lit');
-        document.getElementById('mPip').classList.remove('lit');
-        return;
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const isDuplicate = res.status === 400 && (data.message || '').toLowerCase().includes('contact already exist');
+        if (!isDuplicate) throw new Error(data.message || `Error ${res.status}`);
       }
 
-      const pipValue  = pipForInstrument(instrument);
-      const moneyRisk = balance * risk / 100;
-      const lots      = moneyRisk / (sl * pipValue);
-      const valPerPip = lots * pipValue;
+      // Success
+      unlockTools();
+      document.getElementById('modalLock').textContent = '✅';
+      document.getElementById('modalBody').style.display = 'none';
+      document.getElementById('modalSuccess').style.display = 'block';
 
-      numEl.textContent = lots.toFixed(2);
-      numEl.className   = 'result-number has-value';
-      badge.textContent  = instrument;
-      badge.style.opacity = '1';
+      setTimeout(() => {
+        closeModal();
+        if (pendingPanel) { switchPanel(pendingPanel); pendingPanel = null; }
+      }, 1500);
 
-      riskEl.textContent = money(moneyRisk);
-      pipEl.textContent  = money(valPerPip);
-      document.getElementById('mRisk').classList.add('lit');
-      document.getElementById('mPip').classList.add('lit');
+    } catch (err) {
+      errEl.textContent = 'Error al conectar. Intenta de nuevo.';
+      btn.disabled = false;
+      btn.textContent = 'Desbloquear gratis →';
+    }
+  });
+
+  function unlockTools() {
+    localStorage.setItem('tulote_unlocked', 'true');
+    isUnlocked = true;
+    applyUnlockedState();
+  }
+
+  // ── LOT SIZE CALCULATOR ─────────────────────────────────
+  let risk = 2;
+
+  document.querySelectorAll('.risk-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.risk-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      risk = parseFloat(btn.dataset.risk);
+    });
+  });
+
+  function money(n, decimals = 2) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  function calculate() {
+    const instrument = document.getElementById('instrument').value;
+    const balance    = parseFloat(document.getElementById('balance').value);
+    const sl         = parseFloat(document.getElementById('sl').value);
+
+    const numEl  = document.getElementById('resultNum');
+    const badge  = document.getElementById('instrBadge');
+    const riskEl = document.getElementById('moneyRisk');
+    const pipEl  = document.getElementById('pipVal');
+    const okEl   = document.getElementById('riskOk');
+
+    if (!balance || !sl || balance <= 0 || sl <= 0) {
+      numEl.textContent  = '—'; numEl.className = 'result-number empty';
+      badge.style.opacity = '0';
+      riskEl.textContent = '—'; pipEl.textContent = '—';
+      okEl.classList.remove('show');
+      document.getElementById('mRisk').classList.remove('lit');
+      document.getElementById('mPip').classList.remove('lit');
+      return;
     }
 
-    document.getElementById('calcBtn').addEventListener('click', calculate);
-    document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+    const pipValue  = pipForInstrument(instrument);
+    const moneyRisk = balance * risk / 100;
+    const lots      = moneyRisk / (sl * pipValue);
+    const valPerPip = lots * pipValue;
 
-    // ── SIGNALS ROTATION ──
-    const SIGNALS = [
-      { pair: 'XAU/USD', dir: 'BUY',  time: 'hace 2 min'  },
-      { pair: 'EUR/USD', dir: 'SELL', time: 'hace 5 min'  },
-      { pair: 'GBP/USD', dir: 'BUY',  time: 'hace 8 min'  },
-      { pair: 'US30',    dir: 'SELL', time: 'hace 12 min' },
-      { pair: 'NAS100',  dir: 'BUY',  time: 'hace 15 min' },
-      { pair: 'USD/JPY', dir: 'SELL', time: 'hace 20 min' },
-    ];
+    // Trigger animation by removing and re-adding class
+    numEl.className = 'result-number empty';
+    void numEl.offsetWidth;
+    numEl.textContent = lots.toFixed(2);
+    numEl.className   = 'result-number has-value';
+    badge.textContent = instrument; badge.style.opacity = '1';
+    riskEl.textContent = money(moneyRisk); pipEl.textContent = money(valPerPip);
+    okEl.classList.add('show');
+    document.getElementById('mRisk').classList.add('lit');
+    document.getElementById('mPip').classList.add('lit');
+  }
 
-    let sigIdx = 0;
-    function rotateSignals() {
-      const s1 = document.getElementById('sig1');
-      const s2 = document.getElementById('sig2');
-      if (!s1 || !s2) return;
-      [s1, s2].forEach((el, i) => {
-        const s = SIGNALS[(sigIdx + i) % SIGNALS.length];
-        el.innerHTML = `<span class="bs-signal-pair">${s.pair}</span><span class="bs-dir-badge ${s.dir.toLowerCase()}">${s.dir}</span><span class="bs-signal-time">${s.time}</span>`;
-      });
-      sigIdx = (sigIdx + 1) % SIGNALS.length;
+  document.getElementById('calcBtn').addEventListener('click', calculate);
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+
+  // ── PROFIT / LOSS CALCULATOR ────────────────────────────
+  let plDirection = 'buy';
+
+  document.getElementById('pl-buy').addEventListener('click', () => {
+    plDirection = 'buy';
+    document.getElementById('pl-buy').classList.add('active');
+    document.getElementById('pl-sell').classList.remove('active');
+  });
+
+  document.getElementById('pl-sell').addEventListener('click', () => {
+    plDirection = 'sell';
+    document.getElementById('pl-sell').classList.add('active');
+    document.getElementById('pl-buy').classList.remove('active');
+  });
+
+  function calculatePL() {
+    const instr  = document.getElementById('pl-instrument').value;
+    const entry  = parseFloat(document.getElementById('pl-entry').value);
+    const close  = parseFloat(document.getElementById('pl-close').value);
+    const lots   = parseFloat(document.getElementById('pl-lots').value);
+    const slPips = parseFloat(document.getElementById('pl-sl').value);
+
+    const numEl  = document.getElementById('plResultNum');
+    const badge  = document.getElementById('plInstrBadge');
+
+    if (!entry || !close || !lots || entry <= 0 || close <= 0 || lots <= 0) {
+      numEl.textContent = '—'; numEl.className = 'pl-result-number empty';
+      badge.style.opacity = '0';
+      document.getElementById('plPips').textContent = '—';
+      document.getElementById('plRR').textContent   = '—';
+      return;
     }
-    rotateSignals();
-    setInterval(rotateSignals, 2500);
-  </script>
+
+    const dir      = plDirection === 'buy' ? 1 : -1;
+    const pipSize  = PIP_SIZE[instr];
+    const pipVal   = pipForInstrument(instr);
+    const pips     = (close - entry) * dir / pipSize;
+    const profitUSD = pips * pipVal * lots;
+    const isProfit  = profitUSD >= 0;
+
+    numEl.className = 'pl-result-number empty';
+    void numEl.offsetWidth;
+    numEl.textContent = (isProfit ? '+' : '') + money(profitUSD);
+    numEl.className   = 'pl-result-number ' + (isProfit ? 'profit' : 'loss');
+
+    badge.textContent = instr; badge.style.opacity = '1';
+    document.getElementById('plPips').textContent = (pips >= 0 ? '+' : '') + pips.toFixed(1);
+
+    if (slPips > 0) {
+      const rr = Math.abs(pips) / slPips;
+      document.getElementById('plRR').textContent = '1:' + rr.toFixed(2);
+      document.getElementById('plMRR').classList.add('lit');
+    } else {
+      document.getElementById('plRR').textContent = '—';
+    }
+    document.getElementById('plMPips').classList.add('lit');
+  }
+
+  document.getElementById('plCalcBtn').addEventListener('click', calculatePL);
+
+  // ── MARGIN CALCULATOR ───────────────────────────────────
+  function calculateMargin() {
+    const instr    = document.getElementById('mg-instrument').value;
+    const lots     = parseFloat(document.getElementById('mg-lots').value);
+    const price    = parseFloat(document.getElementById('mg-price').value);
+    const leverage = parseFloat(document.getElementById('mg-leverage').value);
+    const capital  = parseFloat(document.getElementById('mg-capital').value);
+
+    const numEl = document.getElementById('mgResultNum');
+    const badge = document.getElementById('mgInstrBadge');
+
+    if (!lots || !price || !leverage || lots <= 0 || price <= 0) {
+      numEl.textContent = '—'; numEl.className = 'result-number empty';
+      badge.style.opacity = '0';
+      document.getElementById('mgPct').textContent  = '—';
+      document.getElementById('mgLeft').textContent = '—';
+      return;
+    }
+
+    let notionalUSD;
+    const JPY_INSTR = ['USDJPY', 'GBPJPY', 'EURJPY'];
+
+    if (JPY_INSTR.includes(instr)) {
+      const notionalJPY = lots * CONTRACT_SIZE[instr] * price;
+      notionalUSD = notionalJPY / jpyRates['USDJPY'];
+    } else {
+      notionalUSD = lots * CONTRACT_SIZE[instr] * price;
+    }
+
+    const marginReq = notionalUSD / leverage;
+
+    numEl.className = 'result-number empty';
+    void numEl.offsetWidth;
+    numEl.textContent = money(marginReq);
+    numEl.className   = 'result-number has-value';
+    badge.textContent = instr; badge.style.opacity = '1';
+    document.getElementById('mgMPct').classList.add('lit');
+    document.getElementById('mgMLeft').classList.add('lit');
+
+    if (capital > 0) {
+      const pct  = (marginReq / capital) * 100;
+      const left = capital - marginReq;
+      document.getElementById('mgPct').textContent  = pct.toFixed(2) + '%';
+      document.getElementById('mgLeft').textContent = money(left < 0 ? 0 : left);
+    } else {
+      document.getElementById('mgPct').textContent  = '—';
+      document.getElementById('mgLeft').textContent = '—';
+    }
+  }
+
+  document.getElementById('mgCalcBtn').addEventListener('click', calculateMargin);
+
+  // ── SIGNALS ROTATION ───────────────────────────────────
+  const SIGNALS = [
+    { pair: 'XAU/USD', dir: 'BUY',  time: 'hace 2 min'  },
+    { pair: 'EUR/USD', dir: 'SELL', time: 'hace 5 min'  },
+    { pair: 'GBP/USD', dir: 'BUY',  time: 'hace 8 min'  },
+    { pair: 'US30',    dir: 'SELL', time: 'hace 12 min' },
+    { pair: 'NAS100',  dir: 'BUY',  time: 'hace 15 min' },
+    { pair: 'USD/JPY', dir: 'SELL', time: 'hace 20 min' },
+  ];
+
+  let sigIdx = 0;
+  function rotateSignals() {
+    const s1 = document.getElementById('sig1');
+    const s2 = document.getElementById('sig2');
+    if (!s1 || !s2) return;
+    [s1, s2].forEach((el, i) => {
+      const s = SIGNALS[(sigIdx + i) % SIGNALS.length];
+      el.innerHTML = `<span class="bs-signal-pair">${s.pair}</span><span class="bs-dir-badge ${s.dir.toLowerCase()}">${s.dir}</span><span class="bs-signal-time">${s.time}</span>`;
+    });
+    sigIdx = (sigIdx + 1) % SIGNALS.length;
+  }
+  rotateSignals();
+  setInterval(rotateSignals, 2500);
+</script>
 </body>
 </html>
