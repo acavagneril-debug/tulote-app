@@ -1,11 +1,12 @@
-const fetch = require('node-fetch');
-
 exports.handler = async (event) => {
+  console.log('[subscribe] invoked', event.httpMethod);
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method not allowed' };
   }
 
   const { email, nombre } = JSON.parse(event.body);
+  console.log('[subscribe] email:', email);
 
   const response = await fetch('https://api.brevo.com/v3/contacts', {
     method: 'POST',
